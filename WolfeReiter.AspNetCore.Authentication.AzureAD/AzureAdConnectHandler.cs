@@ -19,15 +19,18 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
     /// </summary>
     public class AzureAdConnectHandler : OpenIdConnectHandler, IAuthenticationSignOutHandler
     {
-        public AzureAdConnectHandler(IOptionsMonitor<AzureAdConnectOptions> options, ILoggerFactory logger, HtmlEncoder htmlEncoder, UrlEncoder encoder, ISystemClock clock)
+        public AzureAdConnectHandler(IOptionsMonitor<OpenIdConnectOptions> options, ILoggerFactory logger, HtmlEncoder htmlEncoder, UrlEncoder encoder, ISystemClock clock)
             : base(options, logger, htmlEncoder, encoder, clock)
         {
-            Options = options.CurrentValue;
-            AzureGraphHelper = new AzureGraphHelper(options.CurrentValue);
+            var opt = options.CurrentValue;
+            if(opt is AzureAdConnectOptions) AzureAdConnectOptions = (AzureAdConnectOptions)opt;
+            else AzureAdConnectOptions = new AzureAdConnectOptions(opt);
+
+            AzureGraphHelper = new AzureGraphHelper(AzureAdConnectOptions);
         }
 
-        new protected AzureAdConnectOptions Options { get; set; }
-        AzureGraphHelper AzureGraphHelper { get; set; }
+        protected AzureGraphHelper AzureGraphHelper { get; set; }
+        protected AzureAdConnectOptions AzureAdConnectOptions { get; set; }
 
         /// <summary>
         /// Invoked to process incoming OpenIdConnect messages.
@@ -54,7 +57,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
 
                     if (PrincipalRoleCache.TryGetValue(identityKey, out grouple))
                     {
-                        var expiration = grouple.Item1.AddSeconds(Options.GroupCacheTtlSeconds);
+                        var expiration = grouple.Item1.AddSeconds(AzureAdConnectOptions.GroupCacheTtlSeconds);
                         if (DateTime.UtcNow > expiration ||
                             grouple.Item2.Count() != identity.Claims.Count(x => x.Type == "groups"))
                         {
