@@ -49,7 +49,7 @@ namespace OpenIdConnect.AzureAdSample
                 sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
                 .AddCookie()
-                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, "AAD", o =>
+                .AddAzureAdConnect(OpenIdConnectDefaults.AuthenticationScheme, "AAD", o =>
             {
                 o.ClientId = ClientId;
                 o.ClientSecret = ClientSecret; // for code flow
