@@ -15,7 +15,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
             GroupCacheTtlSeconds    = 60 * 60;
         }
 
-        public AzureAdConnectOptions(OpenIdConnectOptions options)
+        public AzureAdConnectOptions(OpenIdConnectOptions options) : this()
         {
             this.AuthenticationMethod          = options.AuthenticationMethod;
             this.Authority                     = options.Authority;

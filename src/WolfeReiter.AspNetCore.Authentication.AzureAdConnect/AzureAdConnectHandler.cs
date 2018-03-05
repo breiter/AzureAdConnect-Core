@@ -22,14 +22,17 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         public AzureAdConnectHandler(IOptionsMonitor<OpenIdConnectOptions> options, ILoggerFactory logger, HtmlEncoder htmlEncoder, UrlEncoder encoder, ISystemClock clock)
             : base(options, logger, htmlEncoder, encoder, clock)
         {
-            var opt = options.CurrentValue;
-            if(opt is AzureAdConnectOptions) AzureAdConnectOptions = (AzureAdConnectOptions)opt;
-            else AzureAdConnectOptions = new AzureAdConnectOptions(opt);
 
-            AzureGraphHelper = new AzureGraphHelper(AzureAdConnectOptions);
         }
 
-        protected AzureGraphHelper AzureGraphHelper { get; set; }
+        protected AzureGraphHelper AzureGraphHelper()
+        {
+            if (Options is AzureAdConnectOptions) AzureAdConnectOptions = (AzureAdConnectOptions)Options;
+            else AzureAdConnectOptions = new AzureAdConnectOptions(Options);
+
+            return new AzureGraphHelper(AzureAdConnectOptions);
+        }
+
         protected AzureAdConnectOptions AzureAdConnectOptions { get; set; }
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         protected override async Task<HandleRequestResult> HandleRemoteAuthenticateAsync()
         {
             var result = await base.HandleRemoteAuthenticateAsync();
-            if(result.Succeeded) await AddAzureAdGroupRoleClaims(result.Principal);
+            if (result.Succeeded) await AddAzureAdGroupRoleClaims(result.Principal);
             return result;  
         }
 
@@ -73,7 +76,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
 
                     if (!cacheValid)
                     {
-                        var result = await AzureGraphHelper.AzureGroups(incomingPrincipal);
+                        var result = await AzureGraphHelper().AzureGroups(incomingPrincipal);
                         groups = result.Select(x => x.DisplayName);
                         grouple = new Tuple<DateTime, IEnumerable<string>>(DateTime.UtcNow, groups);
                         PrincipalRoleCache.AddOrUpdate(identityKey, grouple, (key, oldGrouple) => grouple);
@@ -90,7 +93,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
                     Logger.LogWarning(ex, "Exception Mapping Groups to Roles");
                     string userObjectID = incomingPrincipal.FindFirst(AzureClaimTypes.ObjectIdentifier).Value;
                     var authContext = new AuthenticationContext(Options.Authority);
-                    var cacheitem = authContext.TokenCache.ReadItems().Where(x => x.UniqueId == userObjectID).SingleOrDefault();
+                   var cacheitem = authContext.TokenCache.ReadItems().Where(x => x.UniqueId == userObjectID).SingleOrDefault();
                     if (cacheitem != null) authContext.TokenCache.DeleteItem(cacheitem);
                 }
             }

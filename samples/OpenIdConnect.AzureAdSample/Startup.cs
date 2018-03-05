@@ -56,6 +56,7 @@ namespace OpenIdConnect.AzureAdSample
                 o.Authority = Authority;
                 o.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 o.SignedOutRedirectUri = "/signed-out";
+                o.CallbackPath = "/Account/SignIn";
                 // GetClaimsFromUserInfoEndpoint = true,
                 o.Events = new OpenIdConnectEvents()
                 {
@@ -83,7 +84,7 @@ namespace OpenIdConnect.AzureAdSample
 
             app.Run(async context =>
             {
-                if (context.Request.Path.Equals("/signin"))
+                if (context.Request.Path.Equals("/signin") || context.Request.Path.Equals("/Account/SignIn"))
                 {
                     if (context.User.Identities.Any(identity => identity.IsAuthenticated))
                     {
