@@ -47,7 +47,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         {
             var credential = new ClientCredential(Options.ClientId, Options.ClientSecret);
             var authContext = new AuthenticationContext(Options.Authority);
-            AuthenticationResult result = await authContext.AcquireTokenAsync(Options.GraphEndpoint, credential);
+            AuthenticationResult result = await authContext.AcquireTokenAsync(Options.GraphAuthority, credential);
             return result.AccessToken;
         }
         static IEnumerable<string> GroupIDs(ClaimsPrincipal principal)

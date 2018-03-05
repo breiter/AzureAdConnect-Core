@@ -11,8 +11,9 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
 
         public AzureAdConnectOptions()
         {
-            GraphEndpoint           = "https://graph.microsoft.com/v1.0";
-            GroupCacheTtlSeconds    = 60 * 60;
+            GraphAuthority       = "https://graph.microsoft.com";
+            GraphApiVersion      = "1.0";
+            GroupCacheTtlSeconds = 60 * 60;
         }
 
         public AzureAdConnectOptions(OpenIdConnectOptions options) : this()
@@ -58,10 +59,17 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         }
 
         /// <summary>
-        /// URL to invoke Graph API. Defaults to "https://graph.microsoft.com/v1.0".
+        /// URL to invoke Graph API. Defaults to &quot;https://graph.microsoft.com"&quot;.
         /// </summary>
         /// <returns></returns>
-        public string GraphEndpoint { get; set; }
+        public string GraphAuthority { get; set; }
+
+        /// <summary>
+        /// Microsoft Graph API version to target. Defaults to &quot;1.0&quot;.
+        /// </summary>
+        /// <returns></returns>
+        public string GraphApiVersion { get; set; }
+        public string GraphEndpoint { get { return string.Format("(0}/{1}", GraphAuthority, GraphApiVersion); } }
 
         /// <summary>
         /// Number of seconds to cache groups locally in memory before requerying Graph. Default is 3600 (1 hour).
