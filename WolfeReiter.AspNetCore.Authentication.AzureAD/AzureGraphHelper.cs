@@ -37,27 +37,17 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
             var authenticationProvider = new DelegateAuthenticationProvider(
                 async(requestMessage) => 
                 {
-                    var token = await AzureGraphToken();
+                    var token = await GraphToken();
                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
                 });
             var graphClient = new GraphServiceClient(Options.GraphEndpoint, authenticationProvider);
             return graphClient;
         }
-        async Task<string> AzureGraphToken()
+        async Task<string> GraphToken()
         {
             var credential = new ClientCredential(Options.ClientId, Options.ClientSecret);
             var authContext = new AuthenticationContext(Options.Authority);
-            AuthenticationResult result;
-
-            if (Options.ReadGraphAsLoggedInUser)
-            {
-                var uid = new UserIdentifier(ClaimsPrincipal.Current.FindFirst(AzureClaimTypes.ObjectIdentifier).Value, UserIdentifierType.UniqueId);
-                result = await authContext.AcquireTokenSilentAsync(Options.GraphEndpoint, credential, uid);
-            }
-            else
-            {
-                result = await authContext.AcquireTokenAsync(Options.GraphEndpoint, credential);
-            }
+            AuthenticationResult result = await authContext.AcquireTokenAsync(Options.GraphEndpoint, credential);
             return result.AccessToken;
         }
         static IEnumerable<string> GroupIDs(ClaimsPrincipal principal)

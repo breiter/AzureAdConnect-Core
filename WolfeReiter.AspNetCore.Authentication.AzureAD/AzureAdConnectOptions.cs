@@ -11,17 +11,9 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
 
         public AzureAdConnectOptions()
         {
-            ReadGraphAsLoggedInUser = false;
             GraphEndpoint           = "https://graph.microsoft.com/v1.0";
             GroupCacheTtlSeconds    = 60 * 60;
         }
-
-        /// <summary>
-        /// Whether to authenticate to the Graph as the current user. When false, logs in as the application.
-        /// Defaults to false.
-        /// </summary>
-        /// <returns></returns>
-        public bool ReadGraphAsLoggedInUser { get; set; }
 
         /// <summary>
         /// URL to invoke Graph API. Defaults to "https://graph.microsoft.com/v1.0".
