@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WolfeReiter.AspNetCore.Authentication.AzureAD", "WolfeReiter.AspNetCore.Authentication.AzureAD\WolfeReiter.AspNetCore.Authentication.AzureAD.csproj", "{21DF66F0-0C75-4EF4-80EA-9D9FC0F9CAE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WolfeReiter.AspNetCore.Authentication.AzureAdConnect", "WolfeReiter.AspNetCore.Authentication.AzureAdConnect\WolfeReiter.AspNetCore.Authentication.AzureAdConnect.csproj", "{21DF66F0-0C75-4EF4-80EA-9D9FC0F9CAE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
