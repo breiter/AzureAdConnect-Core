@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WolfeReiter.AspNetCore.Authentication.AzureAdConnect", "src\WolfeReiter.AspNetCore.Authentication.AzureAdConnect\WolfeReiter.AspNetCore.Authentication.AzureAdConnect.csproj", "{21DF66F0-0C75-4EF4-80EA-9D9FC0F9CAE9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{6DBB662C-3209-4783-8DAC-E8053A63F422}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenIdConnect.AzureAdSample", "samples\OpenIdConnect.AzureAdSample\OpenIdConnect.AzureAdSample.csproj", "{B8302A21-37FD-4C9A-97D8-67F343D751E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,20 @@ Global
 		{21DF66F0-0C75-4EF4-80EA-9D9FC0F9CAE9}.Release|x64.Build.0 = Release|x64
 		{21DF66F0-0C75-4EF4-80EA-9D9FC0F9CAE9}.Release|x86.ActiveCfg = Release|x86
 		{21DF66F0-0C75-4EF4-80EA-9D9FC0F9CAE9}.Release|x86.Build.0 = Release|x86
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Debug|x64.ActiveCfg = Debug|x64
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Debug|x64.Build.0 = Debug|x64
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Debug|x86.ActiveCfg = Debug|x86
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Debug|x86.Build.0 = Debug|x86
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Release|x64.ActiveCfg = Release|x64
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Release|x64.Build.0 = Release|x64
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Release|x86.ActiveCfg = Release|x86
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B8302A21-37FD-4C9A-97D8-67F343D751E1} = {6DBB662C-3209-4783-8DAC-E8053A63F422}
 	EndGlobalSection
 EndGlobal
