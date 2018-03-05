@@ -4,7 +4,7 @@
 
 1. Create your own Azure Active Directory (AD). Save the "tenent name".
 2. Add a new Application: in the Azure AD portal, select Application, and click Add in the drawer.
-3. Set the sign-on url to `http://localhost:42023`.
+3. Set the sign-on url to `http://localhost:44300`.
 4. Select the newly created Application, navigate to the Configure tab.
 5. Find and save the "Client Id"
 8. In the keys section add a new key. A key value will be generated. Save the value as "Client Secret"
