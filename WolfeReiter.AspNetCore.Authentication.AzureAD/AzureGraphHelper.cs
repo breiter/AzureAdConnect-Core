@@ -40,12 +40,11 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
                     var token = await AzureGraphToken();
                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
                 });
-            var graphClient = new GraphServiceClient(Options.AzureGraphEndpoint, authenticationProvider);
+            var graphClient = new GraphServiceClient(Options.GraphEndpoint, authenticationProvider);
             return graphClient;
         }
         async Task<string> AzureGraphToken()
         {
-
             var credential = new ClientCredential(Options.ClientId, Options.ClientSecret);
             var authContext = new AuthenticationContext(Options.Authority);
             AuthenticationResult result;
@@ -53,11 +52,11 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
             if (Options.ReadGraphAsLoggedInUser)
             {
                 var uid = new UserIdentifier(ClaimsPrincipal.Current.FindFirst(AzureClaimTypes.ObjectIdentifier).Value, UserIdentifierType.UniqueId);
-                result = await authContext.AcquireTokenSilentAsync(Options.AzureGraphEndpoint, credential, uid);
+                result = await authContext.AcquireTokenSilentAsync(Options.GraphEndpoint, credential, uid);
             }
             else
             {
-                result = await authContext.AcquireTokenAsync(Options.AzureGraphEndpoint, credential);
+                result = await authContext.AcquireTokenAsync(Options.GraphEndpoint, credential);
             }
             return result.AccessToken;
         }

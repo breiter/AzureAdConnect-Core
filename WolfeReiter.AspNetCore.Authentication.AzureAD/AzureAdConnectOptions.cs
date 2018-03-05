@@ -12,7 +12,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         public AzureAdConnectOptions()
         {
             ReadGraphAsLoggedInUser = false;
-            AzureGraphEndpoint      = "https://graph.microsoft.com/v1.0";
+            GraphEndpoint           = "https://graph.microsoft.com/v1.0";
             GroupCacheTtlSeconds    = 60 * 60;
         }
 
@@ -24,10 +24,10 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         public bool ReadGraphAsLoggedInUser { get; set; }
 
         /// <summary>
-        /// URL to invoke Azure Graph API. Defaults to "https://graph.microsoft.com/v1.0".
+        /// URL to invoke Graph API. Defaults to "https://graph.microsoft.com/v1.0".
         /// </summary>
         /// <returns></returns>
-        public string AzureGraphEndpoint { get; set; }
+        public string GraphEndpoint { get; set; }
 
         /// <summary>
         /// Number of seconds to cache groups locally in memory before requerying Graph. Default is 3600 (1 hour).
