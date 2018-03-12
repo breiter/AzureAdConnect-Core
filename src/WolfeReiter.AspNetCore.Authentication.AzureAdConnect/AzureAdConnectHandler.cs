@@ -93,7 +93,7 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
                     Logger.LogWarning(ex, "Exception Mapping Groups to Roles");
                     string userObjectID = incomingPrincipal.FindFirst(AzureClaimTypes.ObjectIdentifier).Value;
                     var authContext = new AuthenticationContext(Options.Authority);
-                   var cacheitem = authContext.TokenCache.ReadItems().Where(x => x.UniqueId == userObjectID).SingleOrDefault();
+                    var cacheitem = authContext.TokenCache.ReadItems().Where(x => x.UniqueId == userObjectID).SingleOrDefault();
                     if (cacheitem != null) authContext.TokenCache.DeleteItem(cacheitem);
                 }
             }
