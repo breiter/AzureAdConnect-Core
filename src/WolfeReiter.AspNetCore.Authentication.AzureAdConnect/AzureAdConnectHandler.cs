@@ -50,20 +50,22 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
         {
             if (incomingPrincipal != null && incomingPrincipal.Identity.IsAuthenticated == true)
             {
+                Tuple<DateTime, IEnumerable<string>> grouple = null;
+                IEnumerable<string> groups                   = Enumerable.Empty<string>();
+                IEnumerable<string> oldGroups                = Enumerable.Empty<string>();
+                var identity                                 = (ClaimsIdentity)incomingPrincipal.Identity;
+                var identityKey                              = identity.Name;
+                var cacheValid                               = false;
+
                 try
                 {
-                    Tuple<DateTime, IEnumerable<string>> grouple = null;
-                    IEnumerable<string> groups = Enumerable.Empty<string>();
-                    var identity = (ClaimsIdentity)incomingPrincipal.Identity;
-                    var identityKey = identity.Name;
-                    var cacheValid = false;
-
                     if (PrincipalRoleCache.TryGetValue(identityKey, out grouple))
                     {
                         var expiration = grouple.Item1.AddSeconds(AzureAdConnectOptions.GroupCacheTtlSeconds);
                         if (DateTime.UtcNow > expiration ||
                             grouple.Item2.Count() != identity.Claims.Count(x => x.Type == "groups"))
                         {
+                            oldGroups = grouple.Item2;
                             //don't need to check return because if it failed, then the entry was removed already
                             PrincipalRoleCache.TryRemove(identityKey, out grouple);
                         }
@@ -91,10 +93,18 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
                 catch (Exception ex)
                 {
                     Logger.LogWarning(ex, "Exception Mapping Groups to Roles");
-                    string userObjectID = incomingPrincipal.FindFirst(AzureClaimTypes.ObjectIdentifier).Value;
-                    var authContext = new AuthenticationContext(Options.Authority);
-                    var cacheitem = authContext.TokenCache.ReadItems().Where(x => x.UniqueId == userObjectID).SingleOrDefault();
-                    if (cacheitem != null) authContext.TokenCache.DeleteItem(cacheitem);
+                    identity.AddClaim(new Claim(ClaimTypes.AuthorizationDecision, String.Format("AzureAD-Group-Lookup-Error:{0:yyyy-MM-dd_HH:mm.ss}Z", DateTime.UtcNow)));
+                    //Handle intermittnent server problem by keeping old groups if they existed.
+                    if (oldGroups.Any()) 
+                    {
+                        grouple = new Tuple<DateTime, IEnumerable<string>>(DateTime.UtcNow.AddSeconds(-(AzureAdConnectOptions.GroupCacheTtlSeconds / 2)), oldGroups);
+                        PrincipalRoleCache.AddOrUpdate(identityKey, grouple, (key, oldGrouple) => grouple);
+                        foreach (var group in oldGroups)
+                        {
+                            //add AzureAD Group claims as Roles.
+                            identity.AddClaim(new Claim(ClaimTypes.Role, group, ClaimValueTypes.String, "AzureAD"));
+                        }
+                    }
                 }
             }
         }
