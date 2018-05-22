@@ -61,18 +61,24 @@ namespace WolfeReiter.AspNetCore.Authentication.AzureAD
                 {
                     if (PrincipalRoleCache.TryGetValue(identityKey, out grouple))
                     {
-                        var expiration = grouple.Item1.AddSeconds(AzureAdConnectOptions.GroupCacheTtlSeconds);
-                        if (DateTime.UtcNow > expiration ||
-                            grouple.Item2.Count() != identity.Claims.Count(x => x.Type == "groups"))
+                        lock(grouple) //prevent concurrent access to grouple Tuple
                         {
-                            oldGroups = grouple.Item2;
-                            //don't need to check return because if it failed, then the entry was removed already
-                            PrincipalRoleCache.TryRemove(identityKey, out grouple);
-                        }
-                        else
-                        {
-                            cacheValid = true;
-                            groups = grouple.Item2;
+                            var expiration = grouple.Item1.AddSeconds(AzureAdConnectOptions.GroupCacheTtlSeconds);
+                            if (DateTime.UtcNow > expiration ||
+                                grouple.Item2.Count() != identity.Claims.Count(x => x.Type == "groups"))
+                            {
+                                oldGroups = grouple.Item2;
+                                //don't need to check return because if it failed, then the entry was removed already
+                                //or we'll try again.
+                                //don't re-use the "grouple" variable because the out of TryRemove can be null.
+                                Tuple<DateTime, IEnumerable<string>> removedGrouple = null;
+                                PrincipalRoleCache.TryRemove(identityKey, out removedGrouple);
+                            }
+                            else
+                            {
+                                cacheValid = true;
+                                groups = grouple.Item2;
+                            }
                         }
                     }
 
